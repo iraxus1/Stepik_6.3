@@ -25,4 +25,9 @@ docker run -d --name server-flask \
        server-flask
 
 #docker run traefik
-docker run -d --name traefik -p 8080:8080 -p 80:80 -v /var/run/docker.sock:/var/run/docker.sock traefik:latest --api.insecure=true --providers.docker
+docker run -d --name traefik -p 8080:8080 -p \
+      80:80 -v /var/run/docker.sock:/var/run/docker.sock traefik:latest \
+      --api.insecure=true \
+      --providers.docker
+
+#docker run -d --name traefik -p 8080:8080 -p 80:80 -v /var/run/docker.sock:/var/run/docker.sock traefik:latest --api.insecure=true --providers.docker

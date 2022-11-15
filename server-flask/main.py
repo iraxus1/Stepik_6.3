@@ -1,37 +1,30 @@
 import json
+import psycopg2
 
 from flask import Flask
 
 app = Flask(__name__)
 
-import os
-db_host = os.environ['localhost']
-db_user = os.environ['postgres']
-db_password = os.environ['postgres']
-db_name = os.environ['cars']
-
-#connect to database
-import mysql.connector
-db = mysql.connector.connect(
-    host=db_host,
-    user=db_user,
-    passwd=db_password,
-    database=db_name
-)
-cursor = db.cursor()
+def getDatabase():
+    return psycopg2.connect(database="postgres", user="postgres", password="postgres", host="localhost", port=5432)
 
 @app.route('/cars', methods=['GET'])
-def cars():
-    cursor.execute("SELECT * FROM cars")
-    cars = cursor.fetchall()
-    return json.dumps(cars)
+def getCars():
+    conn = getDatabase()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM cars")
+    rows = cur.fetchall()
+    conn.close()
+    return json.dumps(rows)
 
-@app.route('/cars/<year>', methods=['GET'])
-def cars_by_year(year):
-    cursor.execute("SELECT * FROM cars WHERE year = %s", (year,))
-    cars = cursor.fetchall()
-    return json.dumps(cars)
+@app.route('/cars/<int:year>', methods=['GET'])
+def getCarsByYear(year):
+    conn = getDatabase()
+    cur = conn.cursor()
+    cur.execute("SELECT * FROM cars WHERE year = %s", (year,))
+    rows = cur.fetchall()
+    conn.close()
+    return json.dumps(rows)
 
-# Uncomment the following 2 lines to have the app listen on 0.0.0.0:5000
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)

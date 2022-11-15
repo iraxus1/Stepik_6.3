@@ -1,3 +1,2 @@
-docker container rm -f database server-express server-flask traefik
-docker network rm test-network
+docker container rm -f postgres server-express server-flask traefik
 docker volume prune -f
